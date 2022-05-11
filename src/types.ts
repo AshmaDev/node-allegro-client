@@ -18,4 +18,11 @@ interface Config {
   tokens?: AuthResponse | null;
 }
 
-export { Config, AuthResponse };
+interface RequestOptions {
+  method: "get" | "post" | "put" | "patch" | "delete";
+  endpoint: string;
+  headers?: { [key: string]: any };
+  data?: any;
+}
+
+export { Config, AuthResponse, RequestOptions };
