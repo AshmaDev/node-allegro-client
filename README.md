@@ -9,8 +9,6 @@ See Allegro [docs](https://developer.allegro.pl/documentation/) for more details
 
 ### Installation
 
-Installation:
-
 ```sh
 npm i node-allegro-client
 # or
@@ -47,7 +45,7 @@ Authorize the application using the following method:
 allegroClient.authorize("YOUR_OAUTH_CODE");
 ```
 
-After correct authorization, access_token (valid for 12 hours) and refresh_token will be generated (valid for 3 months). 
+After correct authorization, access_token (valid for 12 hours) and refresh_token (valid for 3 months) will be generated. 
 If you do not use this packege for 3 months, you will have to re-authorize app.
 
 Now you can ask the Allegro for any resource:
