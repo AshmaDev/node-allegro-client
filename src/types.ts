@@ -3,6 +3,7 @@ interface AuthResponse {
   token_type: string;
   refresh_token: string;
   expires_in: number;
+  expire_ts?: number;
   scope: string;
   jti: string;
 }
@@ -14,8 +15,10 @@ interface Config {
   redirectUri: string;
   account?: string;
   env?: "prod" | "dev";
-  type: "web" | "device";
   tokens?: AuthResponse | null;
+  baseUrl?: string;
+  apiUrl?: string;
+  oAuth?: string;
 }
 
 interface RequestOptions {
