@@ -1,5 +1,5 @@
 import { BASE_URL, API_URL, DEV_BASE_URL, DEV_API_URL } from "./constants";
-import { Config, RequestOptions } from "./types";
+import { Config, RequestOptions, Error } from "./types";
 import { getOAuthLink, authorize, request } from "./methods";
 import { getTokens } from "./utils";
 
@@ -24,5 +24,5 @@ AllegroClient.prototype = {
   request,
 };
 
-export { Config, RequestOptions };
+export { Config, RequestOptions, Error };
 export default AllegroClient;

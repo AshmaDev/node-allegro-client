@@ -21,6 +21,11 @@ interface Config {
   oAuth?: string;
 }
 
+interface Error {
+  msg: string;
+  err: string;
+}
+
 interface RequestOptions {
   method: "get" | "post" | "put" | "patch" | "delete";
   endpoint: string;
@@ -28,4 +33,4 @@ interface RequestOptions {
   data?: any;
 }
 
-export { Config, AuthResponse, RequestOptions };
+export { Config, AuthResponse, Error, RequestOptions };
