@@ -1,11 +1,11 @@
 # node-allegro-client
 
-Node.js Allegro REST API client - resource management wrapper
+Node.js Allegro REST API client - resource management wrapper  
 [![Unit Tests](https://github.com/AshmaDev/node-allegro-client/actions/workflows/node.js.yml/badge.svg)](https://github.com/AshmaDev/node-allegro-client/actions/workflows/node.js.yml)
 
 ## Getting Started
 
-This package includes a simple resource management wrapper for Allegro REST Api. Currently only Code Flow Authorization is available.
+This package includes a simple resource management wrapper for Allegro REST Api. Currently only Code Flow Authorization is available.  
 See Allegro [docs](https://developer.allegro.pl/documentation/) for more details.
 
 ### Installation
@@ -37,7 +37,7 @@ const allegroClient = new AllegroClient(config);
 const oAuthLink = allegroClient.getOAuthLink();
 ```
 
-Now, you should redirect user to oAuthLink to get oAuth code
+Now, you should redirect user to oAuthLink to get oAuth code.  
 Allegro will redirect you to redirectUri with oAuth code, eg. http://localhost:3000/allegro?code=YOUR_OAUTH_CODE
 
 Authorize the application using the following method:
@@ -46,7 +46,7 @@ Authorize the application using the following method:
 allegroClient.authorize("YOUR_OAUTH_CODE");
 ```
 
-After correct authorization, access_token (valid for 12 hours) and refresh_token (valid for 3 months) will be generated. 
+After correct authorization, access_token (valid for 12 hours) and refresh_token (valid for 3 months) will be generated.   
 If you do not use this packege for 3 months, you will have to re-authorize app.
 
 Now you can ask the Allegro for any resource:
