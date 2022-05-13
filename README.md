@@ -1,6 +1,7 @@
 # node-allegro-client
 
 Node.js Allegro REST API client - resource management wrapper  
+
 [![Unit Tests](https://github.com/AshmaDev/node-allegro-client/actions/workflows/node.js.yml/badge.svg)](https://github.com/AshmaDev/node-allegro-client/actions/workflows/node.js.yml)
 
 ## Getting Started
