@@ -2,37 +2,91 @@ import axios from "axios";
 import { storeTokens } from "./utils";
 import { AuthResponse, RequestOptions, Config } from "./types";
 
-export function getOAuthLink(this): string {
+export function getAuthorizationCodeLink(this): string {
   const { baseUrl, clientId, redirectUri } = this.config;
   return `${baseUrl}/auth/oauth/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}`;
 }
 
-export function authorize(this, code: string): Promise<AuthResponse | Error> {
+function handleAuthResponse(client, data: AuthResponse) {
+  if (!data.access_token) {
+    throw data
+  }
+  data.expire_ts = data.expires_in + Date.now() / 1000;
+  client.config.tokens = data;
+  storeTokens(client.config.account, data);
+}
+
+export async function authorizeWithCode(this, code: string): Promise<AuthResponse> {
   const { baseUrl, redirectUri, oAuth, account } = this.config;
 
-  return new Promise((resolve, reject) => {
-    axios
-      .post(
-        `${baseUrl}/auth/oauth/token?grant_type=authorization_code&redirect_uri=${redirectUri}&code=${code}`,
+  try {
+    const { data } = await axios.post(
+      `${baseUrl}/auth/oauth/token?grant_type=authorization_code&redirect_uri=${redirectUri}&code=${code}`,
+      null,
+      {
+        headers: {
+          Authorization: `Basic ${oAuth}`,
+        },
+      })
+      handleAuthResponse(this, data)
+      return data
+  } catch (err) {
+    throw { msg: "authorization_error", err }
+  }
+}
+
+export async function getDeviceVerificationLink(this): Promise<string> {
+  const { baseUrl, clientId, oAuth } = this.config;
+  const { data: { error, user_code, device_code, expires_in, verification_uri_complete } } = await axios.post(
+    `${baseUrl}/auth/oauth/device`, `client_id=${clientId}`,
+    {
+      headers: {
+        'Authorization': `Basic ${oAuth}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      }
+    })
+  if (error) {
+    throw error
+  }
+  this.user_code = user_code
+  this.deviceCode = device_code
+  this.deviceCodeExpiration = new Date(Date.now() + expires_in*1000)
+  return verification_uri_complete
+}
+
+export async function waitForDeviceVerification(this): Promise<AuthResponse> {
+  const { baseUrl, oAuth } = this.config;
+  while (Date.now() < this.deviceCodeExpiration.getTime()) {
+    try {
+      const { data } = await axios.post(
+        `${baseUrl}/auth/oauth/token?grant_type=urn:ietf:params:oauth:grant-type:device_code&device_code=${this.deviceCode}`,
         null,
         {
           headers: {
-            Authorization: `Basic ${oAuth}`,
+            'Authorization': `Basic ${oAuth}`,
           },
+        })
+      handleAuthResponse(this, data)
+      return data
+    } catch (e: any) {
+      if (e.response.status == 400) {
+        const { error } = e.response.data
+        if (error === 'authorization_pending') {
+          await new Promise(resolve => setTimeout(resolve, 5000));
+          continue
         }
-      )
-      .then(({ data }) => {
-        if (!data.access_token) {
-          return reject({ msg: "authorization_error", err: data });
+        else if (error === 'slow_down') {
+          await new Promise(resolve => setTimeout(resolve, 10000));
+          continue
+        } else {
+          throw { msg: "authorization_error", err: error }
         }
-        data.expire_ts = data.expires_in + Date.now() / 1000;
-        this.config.tokens = data;
-        storeTokens(account, data);
-        return resolve(data);
-      })
-      .catch((err) => reject({ msg: "authorization_error", err }));
-  });
-}
+      }
+      throw { msg: "authorization_error", err: e }
+    }
+  }
+  throw { msg: "device_code expired", err: null }
+} 
 
 export async function request(
   this,

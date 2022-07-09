@@ -11,7 +11,7 @@ const config: Config = {
 test('Authorize with invalid_code, should throw error: "authorization_error"', () => {
   const allegroClient = new AllegroClient(config);
   allegroClient
-    .authorize("invalid_code")
+    .authorizeWithCode("invalid_code")
     .then(() => console.log("Do nothing"))
     .catch((e) => {
       expect(e.msg).toBe("authorization_error");

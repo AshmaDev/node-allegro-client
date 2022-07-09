@@ -1,6 +1,6 @@
 import { BASE_URL, API_URL, DEV_BASE_URL, DEV_API_URL } from "./constants";
 import { Config, RequestOptions, Error } from "./types";
-import { getOAuthLink, authorize, request } from "./methods";
+import { getAuthorizationCodeLink, authorizeWithCode, getDeviceVerificationLink, waitForDeviceVerification, request } from "./methods";
 import { getTokens } from "./utils";
 
 function AllegroClient(this, config: Config): void {
@@ -19,8 +19,10 @@ function AllegroClient(this, config: Config): void {
 }
 
 AllegroClient.prototype = {
-  getOAuthLink,
-  authorize,
+  getAuthorizationCodeLink,
+  authorizeWithCode,
+  getDeviceVerificationLink,
+  waitForDeviceVerification,
   request,
 };
 
