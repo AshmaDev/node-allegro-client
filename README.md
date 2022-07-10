@@ -17,11 +17,11 @@ npm i node-allegro-client
 yarn add node-allegro-client
 ```
 
-### Usage
+### Authorization
 
-First of all, you need to create an application on [Allegro.pl](https://apps.developer.allegro.pl). Remember to select the WEB authorization type.
+First of all, you need to create an application on [Allegro.pl](https://apps.developer.allegro.pl). Both Authorization Code and Device flows are supported.
 
-The first authorization example:
+#### Authorization Code flow:
 
 ```ts
 import AllegroClient, { Config } from 'node-allegro-client';
@@ -35,7 +35,7 @@ const config: Config = {
 };
 
 const allegroClient = new AllegroClient(config);
-const oAuthLink = allegroClient.getOAuthLink();
+const oAuthLink = allegroClient.getAuthorizationCodeLink();
 ```
 
 Now, you should redirect user to oAuthLink to get oAuth code.  
@@ -44,11 +44,38 @@ Allegro will redirect you to redirectUri with oAuth code, eg. http://localhost:3
 Authorize the application using the following method:
 
 ```ts
-allegroClient.authorize("YOUR_OAUTH_CODE");
+allegroClient.authorizeWithCode("YOUR_OAUTH_CODE");
 ```
+
+#### Device flow:
+
+```ts
+import AllegroClient, { Config } from 'node-allegro-client';
+
+const config: Config = {
+  appName: "APP_NAME", // Your App Name
+  clientId: "CLIENT_ID", // App Client ID
+  clientSecret: "SECRET_KEY", // App Secret Key
+  env: "dev", // "dev" for development, "prod" for production
+};
+
+const allegroClient = new AllegroClient(config);
+const verificationLink = allegroClient.getDeviceVerificationLink();
+```
+
+Now, you should ask user to open verificationLink and allow application to access his data.  
+In parallel, the application can make attempts to authorize:
+
+```ts
+allegroClient.waitForDeviceVerification();
+```
+
+#### Token validity
 
 After correct authorization, access_token (valid for 12 hours) and refresh_token (valid for 3 months) will be generated.   
 If you do not use this packege for 3 months, you will have to re-authorize app.
+
+### Usage
 
 Now you can ask the Allegro for any resource:
 
