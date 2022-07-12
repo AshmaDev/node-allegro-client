@@ -6,7 +6,7 @@ Node.js Allegro REST API client - resource management wrapper
 
 ## Getting Started
 
-This package includes a simple resource management wrapper for Allegro REST Api. Currently only Code Flow Authorization is available.  
+This package includes a simple resource management wrapper for Allegro REST Api.    
 See Allegro [docs](https://developer.allegro.pl/documentation/) for more details.
 
 ### Installation
