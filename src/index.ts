@@ -15,7 +15,7 @@ function AllegroClient(this, config: Config): void {
   }
   if (!config.account) this.config.account = "default";
   this.config.oAuth = Buffer.from(`${config.clientId}:${config.clientSecret}`).toString("base64");
-  this.config.tokens = getTokens(this.config.account) || null;
+  if (!config.tokens) this.config.tokens = getTokens(this.config.account) || null;
 }
 
 AllegroClient.prototype = {
