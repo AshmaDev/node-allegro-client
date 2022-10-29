@@ -1,6 +1,6 @@
 {
   "name": "node-allegro-client",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Node.js Allegro REST API client",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
