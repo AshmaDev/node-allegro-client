@@ -28,3 +28,4 @@ AllegroClient.prototype = {
 
 export { Config, RequestOptions, Error };
 export default AllegroClient;
+module.exports = AllegroClient
